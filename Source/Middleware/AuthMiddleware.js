@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import UserModel from "../../Models/UserModel.js";
 
-export const roles = {admin:'admin' , user:'user'};
+export const Roles = {admin:'admin' , user:'user'};
 
 export const Auth = (AccessRoles = [])=>{
     return async (req,res,next)=>{
@@ -11,23 +11,23 @@ export const Auth = (AccessRoles = [])=>{
             return res.status(400).json({Message:"Invalid Authorization"});
         }
         const token = authorization.split(process.env.BEARER)[1];
-        const decoded = jwt.verify(token,process.env.LOGINSIGNATURE);
+        const decoded = jwt.verify(token,process.env.LOGIN_SIGNATURE);
         if(!decoded){
             return res.status(400).json({Message:"Invalid Token"});
         }
-        const FindUser = await UserModel.findById(decoded.id).select("name role passwordTime");
-        if(!FindUser){
+        const User = await UserModel.findById(decoded.id).select("name role passwordTime");
+        if(!User){
             return res.status(404).json({Message:'User Nonexistent'});
         }
-        if(parseInt(FindUser.passwordTime?.getTime()/1000) > decoded.iat){
+        if(parseInt(User.passwordTime?.getTime()/1000) > decoded.iat){
             return res.status(400).json({Message:"Expired Token"})
         }
-        if(!AccessRoles.includes(FindUser.role)){
+        if(!AccessRoles.includes(User.role)){
             return res.status(403).json({Message:'403 Forbidden'})
         }
-        req.user = FindUser;
+        req.user = User;
     }catch(error){
-        res.json({Message:"Caught Error",error:error.stack})
+       return res.json({Message:"Caught Error",error:error.stack})
     }
     next()
 }
