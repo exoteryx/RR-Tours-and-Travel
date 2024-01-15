@@ -3,12 +3,14 @@ import { GlobalErrorHandler } from "../Middleware/ErrorHandling.js"
 import AuthRouter from '../Modules/Auth/Router.js'
 import TourRouter from '../Modules/Tour/Router.js'
 import CityRouter from '../Modules/City/Router.js'
+import POstRouter from "../Modules/Post/Router.js";
 const Run = async (App,express)=>{
     App.use(express.json());
     Connect();
     App.use("/auth",AuthRouter);
     App.use('/tour',TourRouter);
     App.use("/city",CityRouter),
+    App.use("/post",POstRouter),
     App.get("/",(req,res)=>{
       res.json({Message:"Welcome"})
     }); //Keep Last

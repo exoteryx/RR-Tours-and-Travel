@@ -12,10 +12,10 @@ export const CreateTourSchema = joi.object({
     }),
 })
 
-export const InsertCitySchema = joi.object({
+/*export const InsertCitySchema = joi.object({
     id:joi.string().required(),
     citiesIDs:joi.array().required(),
-})
+})*/
 
 export const UpdateTourSchema = joi.object({
     id:joi.string().required(),
